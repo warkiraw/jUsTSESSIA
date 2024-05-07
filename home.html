@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chinese Food Recipes</title>
+    <script src="https://kit.fontawesome.com/9a39e2ad21.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffe8cc; /* Оранжевый фон другого оттенка */
+            margin: 0;
+            padding: 0;
+            position: relative; /* Для позиционирования корзины */
+        }
+    
+        .header {
+            background-color: #ff9933; /* Оранжевый цвет шапки */
+            padding: 20px;
+            text-align: center; /* Фиксированная позиция шапки  /* Поверх других элементов */
+        }
+    
+        .header h1 {
+            display: inline-block;
+            margin: 0;
+            color: #fff;
+            font-style: serif;
+        }
+    
+        .fa-cart-shopping {
+            background-color: #ff9933; /* Оранжевый цвет кнопки */
+            color: #fff;
+            border: none;
+            font-size: 120%;
+            border-radius: 5px;
+            position: absolute; /* Абсолютная позиция кнопки */
+            top: 30px;
+            right: 60px;
+            cursor: pointer;
+        }
+    
+        h1 {
+            text-align: center;
+            margin-top: 60px; /* Учитываем высоту шапки */
+            color: #333;
+        }
+    
+        #recipes-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    
+        #recipes-list li {
+            width: 300px;
+            margin: 20px;
+            background-color: #ffffff85;
+            border-radius: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            text-align: center;
+        }
+        #recipes-list h2 {
+            font-size: 130%;
+            font-family: serif;
+        }
+        #recipes-list li img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            margin-bottom: 10px;
+        }
+        #recipes-list li button {
+            background-color: #ff9933; /* Оранжевый цвет кнопки */
+            color: #fff;
+        }
+        #recipes-list li button:hover {
+            background-color: #ff8000;
+        }
+    
+        strong {
+            font-weight: bold;
+        }
+    
+        .difficulty {
+            color: #007bff;
+        }
+    
+        @media (max-width: 768px) {
+            #recipes-list li {
+                width: 100%;
+            }
+        }
+    </style>
+    </head>
+    <body>
+        <div class="header">
+            <h1 class="cab" >Charki</h1>
+            <i class="fa-solid fa-cart-shopping cart-icon"></i>
+        </div>
+        <ul id="recipes-list"></ul>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        //////////////////////////////////////////////////////////////// api
+        const settings = {
+            async: true,
+            crossDomain: true,
+            url: 'https://chinese-food-db.p.rapidapi.com/',
+            method: 'GET',
+            headers: {
+                'X-RapidAPI-Key': 'b9438b6aaamsh2f26321cf2e9f46p158746jsn11df906fe0b3',
+                'X-RapidAPI-Host': 'chinese-food-db.p.rapidapi.com'
+            }
+        };
+
+        $.ajax(settings).done(function (response) {
+            const recipes = response.slice(0, 10); // Первые 10 рецептов
+            const recipesList = document.getElementById('recipes-list');
+            recipes.forEach(function (recipe) {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `<h2>${recipe.title}</h2><img src="${recipe.image}" alt="${recipe.title}">`
+                listItem.addEventListener('click', function() {
+                    window.location.href = `recipe.html?id=${recipe.id}`;
+                });;
+                recipesList.appendChild(listItem);
+            });
+        }).fail(function (err) {
+            console.error(err);
+        });
+        ////////////////////////////////////////////////////////////////////// api
+
+        $(document).ready(function() {
+            $('.cart-icon').click(function() {
+                window.location.href = 'cart.html';
+            });
+            $('.cab').click(function() {
+                window.location.href = 'cabinet.html';
+            });
+        });
+    </script>
+</body>
+</html>

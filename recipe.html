@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Details</title>
+    <script src="https://kit.fontawesome.com/9a39e2ad21.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #ffe8cc;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+.header {
+    background-color: #ff9933;
+    padding: 20px;
+    text-align: center;
+}
+
+.header h1 {
+    display: inline-block;
+    margin: 0;
+    color: #fff;
+    font-style: serif;
+}
+
+.fa-cart-shopping {
+    background-color: #ff9933;
+    color: #fff;
+    border: none;
+    font-size: 120%;
+    border-radius: 5px;
+    position: absolute;
+    top: 30px;
+    right: 60px;
+    cursor: pointer;
+}
+
+.recipe-details {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-details h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.recipe-details img {
+    max-width: 30%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.recipe-details p {
+    margin-bottom: 15px;
+}
+
+#ingredients-list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+#ingredients-list li {
+    margin-bottom: 5px;
+}
+    .add-button {
+            background-color: green;
+            color: white;
+            padding: 10px 100px;
+            border-radius: 5px;
+            cursor: pointer;
+            float: right;
+        }
+
+        .add-button:hover {
+            background-color: darkgreen;
+        }
+
+        .quantity {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .minus-button,
+        .plus-button {
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="cab">Charki</h1>
+        <i class="fa-solid fa-cart-shopping cart-icon"></i>
+    </div>
+    <div class="recipe-details">
+        <h2 id="recipe-title"></h2>
+        <div class="add-button" id="add-button">Add</div>
+        <p id="recipe-time"></p>
+        <img id="recipe-image" src="" alt="">
+        <p id="recipe-description"></p>
+        <ul id="ingredients-list"></ul>
+        <ul id="method-list"></ul>
+        <div class="quantity" id="quantity">0</div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+const addButton = document.getElementById('add-button');
+const quantityElement = document.getElementById('quantity');
+let quantity = parseInt(localStorage.getItem('quantity')) || 0;
+quantityElement.textContent = quantity;
+const urlParams = new URLSearchParams(window.location.search);
+const recipeId = urlParams.get('id');
+const settings = {
+    async: true,
+    crossDomain: true,
+    url: `https://chinese-food-db.p.rapidapi.com/${recipeId}`,
+    method: 'GET',
+    headers: {
+        'X-RapidAPI-Key': 'b9438b6aaamsh2f26321cf2e9f46p158746jsn11df906fe0b3',
+        'X-RapidAPI-Host': 'chinese-food-db.p.rapidapi.com'
+    }
+};
+
+$.ajax(settings).done(function (response) {
+    const recipe = response; 
+    const money = recipe.id * 2500;
+    document.getElementById('recipe-title').innerText = recipe.title;
+    document.getElementById('recipe-image').src = recipe.image;
+    document.getElementById('recipe-description').innerText = recipe.description;
+    document.getElementById('recipe-time').innerText = recipe.time;
+    // Отображение ингредиентов
+    const ingredientsList = document.getElementById('ingredients-list');
+    recipe.ingredients.forEach(function (ingredient) {
+        const listItem = document.createElement('li');
+        listItem.innerText = ingredient;
+        ingredientsList.appendChild(listItem);
+    });
+    const methodList = document.getElementById('method-list');
+    recipe.method.forEach(function(method) {
+        const listItem = document.createElement('li');
+        methodList.appendChild(listItem);
+        for (const [step, description] of Object.entries(method)) {
+            const stepElement = document.createElement('div');
+            stepElement.classList.add('step');
+            stepElement.innerHTML = `<strong>${step}:</strong> ${description}`;
+            listItem.appendChild(stepElement);
+        }
+    });
+    addButton.addEventListener('click', function() {
+        if (localStorage.getItem('cart') && localStorage.getItem('cart').includes(recipe.title)) {
+            // Если значение 'a' уже есть в корзине, увеличиваем только 'quantity'
+            let cart = localStorage.getItem('cart');
+            const regex = new RegExp(`${recipe.title} - (\\d+)`);
+            let match = regex.exec(cart);
+            if (match) {
+                quantity = parseInt(match[1]);
+                quantity++;
+                cart = cart.replace(regex, `${recipe.title} - ${quantity}`);
+                localStorage.setItem('cart', cart);
+            }
+        } else {
+            // Если значения 'a' нет в корзине, добавляем новую запись
+            quantity++;
+            let cart = localStorage.getItem('cart') || '';
+            cart += `${recipe.title} - ${quantity} - ${money}|`;
+            localStorage.setItem('cart', cart);
+        }
+
+        if (quantity === 0) {
+            addButton.textContent = 'Add';
+        } else {
+            addButton.textContent = '+';
+        }
+    quantityElement.textContent = quantity;
+    console.log(localStorage)
+});
+}).fail(function (err) {
+    console.error(err);
+});
+
+$(document).ready(function() {
+    $('.cart-icon').click(function() {
+        window.location.href = 'cart.html';
+    });
+    $('.cab').click(function() {
+                window.location.href = 'cabinet.html';
+    });
+});
+    </script>
+</body>
+</html>

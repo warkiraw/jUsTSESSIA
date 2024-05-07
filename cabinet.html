@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charki</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffe8cc; /* Оранжевый фон другого оттенка */
+            margin: 0;
+            padding: 0;
+            position: relative; /* Для позиционирования корзины */
+        }
+    
+        .header {
+            background-color: #ff9933; /* Оранжевый цвет шапки */
+            padding: 20px;
+            text-align: center; /* Фиксированная позиция шапки  /* Поверх других элементов */
+        }
+    
+        .header h1 {
+            display: inline-block;
+            margin: 0;
+            color: #fff;
+            font-style: serif;
+        }
+    
+        .fa-cart-shopping {
+            background-color: #ff9933; /* Оранжевый цвет кнопки */
+            color: #fff;
+            border: none;
+            font-size: 120%;
+            border-radius: 5px;
+            position: absolute; /* Абсолютная позиция кнопки */
+            top: 30px;
+            right: 60px;
+            cursor: pointer;
+        }
+    
+        .user-info {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    
+        .avatar {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            line-height: 50px;
+            border-radius: 50%;
+            margin-right: 20px;
+            font-size: 24px;
+        }
+    
+        .user-details {
+            display: inline-block;
+            vertical-align: top;
+        }
+    
+        .edit-btn {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    
+        .edit-form {
+            display: none;
+            margin-top: 20px;
+        }
+    
+        .edit-form input {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+    
+        .save-btn {
+            background-color: #28a745;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Charki</h1>
+        <i class="fa-solid fa-cart-shopping cart-icon"></i>
+    </div>
+    <div class="user-info">
+        <div class="avatar"><i class="fas fa-user"></i></div>
+        <div class="user-details">
+            <p>Email: <span id="email">example@example.com</span></p>
+            <p>Name: <span id="name">John Doe</span></p>
+            <p>Date of Birth: <span id="dob">01/01/2000</span></p>
+            <p><span id="nigga"></span></p>
+            <button class="edit-btn" onclick="editUser()">Edit</button>
+        </div>
+        <form class="edit-form" onsubmit="saveUser(event)">
+            <input type="email" id="edit-email" required>
+            <input type="text" id="edit-name" required>
+            <input type="date" id="edit-dob" required>
+            <button type="submit" class="save-btn">Save</button>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Получение данных из localStorage или установка значений по умолчанию
+        const emailElement = document.getElementById('email');
+        const nameElement = document.getElementById('name');
+        const dobElement = document.getElementById('dob');
+        const niggaElement = document.getElementById('nigga');
+        let email = localStorage.getItem('email') || 'example@example.com';
+        let name = localStorage.getItem('name') || 'John Doe';
+        let dob = localStorage.getItem('dob') || '01/01/2000';
+        let nigga = localStorage.getItem('nigga')
+        emailElement.textContent = email;
+        nameElement.textContent = name;
+        dobElement.textContent = dob;
+        niggaElement.textContent = nigga;
+
+        // Функция редактирования данных
+        // Функция редактирования данных
+        function editUser() {
+            document.querySelector('.edit-form').style.display = 'block';
+            document.querySelector('.user-details').style.display = 'none';
+            document.getElementById('edit-email').value = email;
+            document.getElementById('edit-name').value = name;
+            document.getElementById('edit-dob').value = dob;
+        }
+
+
+        // Функция сохранения данных
+        function saveUser(event) {
+            event.preventDefault();
+            email = document.getElementById('edit-email').value;
+            name = document.getElementById('edit-name').value;
+            dob = document.getElementById('edit-dob').value;
+            localStorage.setItem('email', email);
+            localStorage.setItem('name', name);
+            localStorage.setItem('dob', dob);
+            emailElement.textContent = email;
+            nameElement.textContent = name;
+            dobElement.textContent = dob;
+            document.querySelector('.edit-form').style.display = 'none';
+            document.querySelector('.user-details').style.display = 'block';
+        }
+        $(document).ready(function() {
+            $('.cart-icon').click(function() {
+                window.location.href = 'cart.html';
+            });
+            $('.cab').click(function() {
+                window.location.href = 'cabinet.html';
+            });
+        });
+    </script>
+</body>
+</html>

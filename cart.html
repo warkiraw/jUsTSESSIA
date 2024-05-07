@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    <script src="https://kit.fontawesome.com/9a39e2ad21.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffe8cc; /* Оранжевый фон другого оттенка */
+            margin: 0;
+            padding: 0;
+            position: relative; /* Для позиционирования корзины */
+        }
+    
+        .header {
+            background-color: #ff9933; /* Оранжевый цвет шапки */
+            padding: 20px;
+            text-align: center; /* Фиксированная позиция шапки  /* Поверх других элементов */
+        }
+    
+        .header h1 {
+            display: inline-block;
+            margin: 0;
+            color: #fff;
+            font-style: serif;
+        }
+    
+        .fa-cart-shopping {
+            background-color: #ff9933; /* Оранжевый цвет кнопки */
+            color: #fff;
+            border: none;
+            font-size: 120%;
+            border-radius: 5px;
+            position: absolute; /* Абсолютная позиция кнопки */
+            top: 30px;
+            right: 60px;
+            cursor: pointer;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            background-color: #fff9f4;
+            width: 70%;
+            margin-left: 200px;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #000000;
+            padding: 10px;
+        }
+
+        th {
+            text-align: left;
+        }
+
+        .cart-item-quantity {
+            text-align: center;
+        }
+
+        .cart-item-price {
+            text-align: right;
+        }
+
+        .cart-total {
+            text-align: right;
+            margin-top: 20px;
+            margin-right: 260px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="cab" >Charki</h1>
+        <i class="fa-solid fa-cart-shopping cart-icon"></i>
+    </div>
+    <h1>Корзина</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Количество</th>
+                <th>Цена</th>
+            </tr>
+        </thead>
+        <tbody id="cart-items"></tbody>
+    </table>
+    <div id="cart-total" class="cart-total"></div>
+    <button id="checkout-button" class="checkout-but">Оплатить</button>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        const savedValue = localStorage.getItem('cart');
+        const cartItems = savedValue ? savedValue.split('|') : [];
+        const outputElement = document.getElementById('cart-items');
+        let total = 0;
+        console.log(cartItems);
+        localStorage.setItem('nigga',cartItems)
+        cartItems.forEach(itemString => {
+            const item = itemString.trim();
+            if (!item) {
+                return;
+            }
+            const [name, quantity, price] = item.split(' - ');
+            console.log(name, quantity, price);
+            const totalPrice = parseInt(quantity) * parseFloat(price);
+            total += totalPrice;
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${name}</td>
+                <td class="cart-item-quantity">${quantity}</td>
+                <td class="cart-item-price">${price}</td>
+            `;
+            outputElement.appendChild(row);
+        });
+
+        const totalElement = document.getElementById('cart-total');
+        totalElement.textContent = `Итог: $${total.toFixed(2)}`;
+    $(document).ready(function() {
+            $('.cart-icon').click(function() {
+                window.location.href = 'cart.html';
+            });
+            $('.cab').click(function() {
+                window.location.href = 'home.html';
+            });
+            $('.checkout-but').click(function() {
+                window.location.href = 'checkout.html';
+            });
+        });
+    </script>
+</body>
+</html>
